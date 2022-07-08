@@ -13,22 +13,36 @@ export function Post() {
             <span>Developer</span>
           </div>
         </div>
-        <time title="23 de junho de 2022" dateTime="2022-06-23" style={{ fontSize: "1rem", whiteSpace: "nowrap" }}>
+        <time
+          title="23 de junho de 2022"
+          dateTime="2022-06-23"
+          style={{ fontSize: "1rem", whiteSpace: "nowrap" }}
+        >
           Publicado há 1h
         </time>
       </header>
-      <p className={styles.postMessage}>
-        Fala galeraa 👋 <br /> <br /> Acabei de subir mais um projeto no meu portifa. É um
-        projeto que fiz no NLW Return, evento da Rocketseat. O nome do projeto é
-        DoctorCare 🚀 <br /> <br /> 👉 jane.design/doctorcare <br /> <br /> #novoprojeto #nlw #rocketseat 
-      </p>
+      <div className={styles.postMessage}>
+        <p>Fala galeraa 👋</p>
+        <p>
+          Acabei de subir mais um projeto no meu portifa. É um projeto que fiz
+          no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀{" "}
+        </p>
+        <p>
+          <p>
+            <a href="#">👉 jane.design/doctorcare</a>{" "}
+          </p>
+          <p>
+            <a href="#">#novoprojeto</a>{' '}
+            <a href="#">#nlw</a>{' '}
+            <a href="#">#rocketseat</a>
+          </p>
+        </p>
+      </div>
 
       <div className={styles.createFeedback}>
         <strong>Deixe seu feedback</strong>
 
-        <textarea>
-
-        </textarea>
+        <textarea />
 
         <button type="button">Publicar</button>
       </div>
