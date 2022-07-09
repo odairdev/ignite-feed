@@ -8,3 +8,14 @@
   gap: 2rem;
   align-items: flex-start; /*So it doesnt stretch the sidebar*/
 }
+
+
+@media (max-width: 768px) {
+  html {
+    font-size: 93.75%;
+  }
+
+  .wrapper {
+   grid-template-columns: 1fr;
+  }
+}
