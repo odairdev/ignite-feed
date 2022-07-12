@@ -1,48 +1,88 @@
+import { format, formatDistanceToNow } from "date-fns";
+import ptBr from 'date-fns/locale/pt-BR'
+import { FormEvent, useState } from "react";
+
 import { Avatar } from "../avatar/Avatar";
 import { Comment } from "../comment/Comment";
 import styles from "./Post.module.css";
 
-export function Post() {
+interface PostProps {
+  post: {
+    id: number;
+    author: {
+      avatarUrl: string;
+      name: string;
+      role: string;
+    },
+    content: Array<{
+      type: string;
+      content: string
+    }>,
+    publishedAt: Date
+  }
+}
+
+export function Post({ post }: PostProps) {
+  const [comments, setComments] = useState([
+    'Muito bom, parabééns!',
+    'Show de bola!'
+
+  ])
+  const [feedback, setFeedback] = useState('')
+
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault()
+
+    setComments([...comments, feedback])
+    setFeedback('')
+  }
+
+  const publishedDateFormated = format(post.publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
+    locale: ptBr,
+  })
+
+  const dateRelativeToNow = formatDistanceToNow(post.publishedAt, {
+    locale: ptBr,
+    addSuffix: true
+  })
+
   return (
     <article className={styles.post}>
       <header className={styles.profile}>
         <div className={styles.profileContent}>
-          <Avatar avatarURL="https://github.com/odairdev.png" />
+          <Avatar avatarURL={post.author.avatarUrl} />
 
           <div>
-            <p>Odair J. C. Junior</p>
-            <span>Developer</span>
+            <p>{post.author.name}</p>
+            <span>{post.author.role}</span>
           </div>
         </div>
         <time
-          title="23 de junho de 2022"
-          dateTime="2022-06-23"
+          title={publishedDateFormated}
+          dateTime={post.publishedAt.toISOString()}
           style={{ fontSize: "1rem", whiteSpace: "nowrap" }}
         >
-          Publicado há 1h
+          Publicado {dateRelativeToNow}
         </time>
       </header>
       <div className={styles.postMessage}>
-        <p>Fala galeraa 👋</p>
-        <p>
-          Acabei de subir mais um projeto no meu portifa. É um projeto que fiz
-          no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀{" "}
-        </p>
-        <p>
-          <p>
-            <a href="#">👉 jane.design/doctorcare</a>{" "}
-          </p>
-          <p>
-            <a href="#">#novoprojeto</a> <a href="#">#nlw</a>{" "}
-            <a href="#">#rocketseat</a>
-          </p>
-        </p>
+        {post.content.map(sentence => {
+          if(sentence.type === 'paragraph') {
+            return (
+              <p key={sentence.content}>{sentence.content}</p>
+            )
+          } else {
+            return (
+              <p><a key={sentence.content} href="#">{sentence.content}</a></p>
+            )
+          }
+        })}
       </div>
 
-      <form className={styles.createFeedback}>
+      <form className={styles.createFeedback} onSubmit={handleSubmit}>
         <strong>Deixe seu feedback</strong>
 
-        <textarea placeholder="Deixe um comentário" />
+        <textarea onChange={e => setFeedback(e.target.value)} value={feedback} placeholder="Deixe um comentário" />
 
         <footer>
           <button type="submit">Publicar</button>
@@ -50,7 +90,9 @@ export function Post() {
       </form>
 
       <div className={styles.commentList}>
-        <Comment />
+        {comments && comments.map(comment => (
+          <Comment content={comment}/>
+        ))}
       </div>
     </article>
   );
