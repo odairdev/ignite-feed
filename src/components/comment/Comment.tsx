@@ -5,9 +5,11 @@ import styles from "./Comment.module.css";
 
 interface CommentProps {
   content: string
+  onDeleteComment: (deletedComment: string) => void;
 }
 
-export function Comment({content}:CommentProps) {
+export function Comment({content, onDeleteComment}:CommentProps) {
+
   return (
     <div className={styles.comment}>
       <Avatar avatarURL="https://github.com/diego3g.png" border={false} />
@@ -23,7 +25,7 @@ export function Comment({content}:CommentProps) {
               </time>
             </div>
 
-            <button title="Deletar comentario">
+            <button onClick={() => onDeleteComment(content)} title="Deletar comentario">
               <Trash size={20} />
             </button>
           </header>

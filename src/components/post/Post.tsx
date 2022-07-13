@@ -1,6 +1,6 @@
 import { format, formatDistanceToNow } from "date-fns";
-import ptBr from 'date-fns/locale/pt-BR'
-import { FormEvent, useState } from "react";
+import ptBr from "date-fns/locale/pt-BR";
+import { FormEvent, useEffect, useState } from "react";
 
 import { Avatar } from "../avatar/Avatar";
 import { Comment } from "../comment/Comment";
@@ -13,38 +13,51 @@ interface PostProps {
       avatarUrl: string;
       name: string;
       role: string;
-    },
+    };
     content: Array<{
       type: string;
-      content: string
-    }>,
-    publishedAt: Date
-  }
+      content: string;
+    }>;
+    publishedAt: Date;
+  };
 }
 
 export function Post({ post }: PostProps) {
   const [comments, setComments] = useState([
-    'Muito bom, parabééns!',
-    'Show de bola!'
-
-  ])
-  const [feedback, setFeedback] = useState('')
+    "Muito bom, parabééns!",
+    "Show de bola!",
+  ]);
+  const [feedback, setFeedback] = useState("");
 
   const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    setComments([...comments, feedback])
-    setFeedback('')
-  }
+    if (feedback !== '') {
+      setComments([...comments, feedback]);
+      setFeedback("");
+    }
+  };
 
-  const publishedDateFormated = format(post.publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
-    locale: ptBr,
-  })
+  const handleDeleteComment = (chosenComment: string) => {
+    setComments((prevComments) =>
+      prevComments.filter((comment) => {
+        return comment != chosenComment;
+      })
+    );
+  };
+
+  const publishedDateFormated = format(
+    post.publishedAt,
+    "d 'de' LLLL 'às' HH:mm'h'",
+    {
+      locale: ptBr,
+    }
+  );
 
   const dateRelativeToNow = formatDistanceToNow(post.publishedAt, {
     locale: ptBr,
-    addSuffix: true
-  })
+    addSuffix: true,
+  });
 
   return (
     <article className={styles.post}>
@@ -66,15 +79,15 @@ export function Post({ post }: PostProps) {
         </time>
       </header>
       <div className={styles.postMessage}>
-        {post.content.map(sentence => {
-          if(sentence.type === 'paragraph') {
-            return (
-              <p key={sentence.content}>{sentence.content}</p>
-            )
+        {post.content.map((sentence) => {
+          if (sentence.type === "paragraph") {
+            return <p key={sentence.content}>{sentence.content}</p>;
           } else {
             return (
-              <p><a key={sentence.content} href="#">{sentence.content}</a></p>
-            )
+              <p key={sentence.content}>
+                <a href="#">{sentence.content}</a>
+              </p>
+            );
           }
         })}
       </div>
@@ -82,17 +95,27 @@ export function Post({ post }: PostProps) {
       <form className={styles.createFeedback} onSubmit={handleSubmit}>
         <strong>Deixe seu feedback</strong>
 
-        <textarea onChange={e => setFeedback(e.target.value)} value={feedback} placeholder="Deixe um comentário" />
+        <textarea
+          onChange={(e) => setFeedback(e.target.value)}
+          value={feedback}
+          placeholder="Deixe um comentário"
+          required
+        />
 
         <footer>
-          <button type="submit">Publicar</button>
+          <button type="submit" disabled={feedback.length === 0}>Publicar</button>
         </footer>
       </form>
 
       <div className={styles.commentList}>
-        {comments && comments.map(comment => (
-          <Comment content={comment}/>
-        ))}
+        {comments &&
+          comments.map((comment) => (
+            <Comment
+              key={comment}
+              content={comment}
+              onDeleteComment={handleDeleteComment}
+            />
+          ))}
       </div>
     </article>
   );
