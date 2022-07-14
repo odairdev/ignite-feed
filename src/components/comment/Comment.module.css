@@ -75,7 +75,11 @@
 }
 
 .comment footer button:hover {
-  color: var(--green-300);
+  color: var(--green-500);
+}
+
+.comment footer button.liked {
+  color: var(--green-500);
 }
 
 .comment footer span::before {

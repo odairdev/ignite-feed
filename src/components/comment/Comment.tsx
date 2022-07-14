@@ -1,4 +1,5 @@
 import { ThumbsUp, Trash } from "phosphor-react";
+import { useState } from "react";
 import { Avatar } from "../avatar/Avatar";
 
 import styles from "./Comment.module.css";
@@ -9,6 +10,18 @@ interface CommentProps {
 }
 
 export function Comment({content, onDeleteComment}:CommentProps) {
+  const [likes, setLikes] = useState(20)
+  const [liked, setLiked] = useState(true)
+
+  const onLike = () => {
+    if(liked) {
+      setLikes(prevState => prevState - 1)
+      setLiked(false)
+    } else {
+      setLikes(prevState => prevState + 1)
+      setLiked(true)
+    }
+  }
 
   return (
     <div className={styles.comment}>
@@ -34,10 +47,10 @@ export function Comment({content, onDeleteComment}:CommentProps) {
         </div>
 
         <footer>
-          <button>
+          <button onClick={onLike} className={liked ? styles.liked : ''}>
             <ThumbsUp size={20} />
              Aplaudir 
-            <span>20</span>
+            <span>{likes}</span>
           </button>
         </footer>
       </div>
